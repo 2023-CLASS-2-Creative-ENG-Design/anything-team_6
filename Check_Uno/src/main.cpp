@@ -1,8 +1,6 @@
-#include <LiquidCrystal.h>
-#include <Wire.h>
-#include <SPI.h>
-
+#include <Arduino.h>
 #include <time.h>
+#include <LiquidCrystal.h>
 
 #define MAX 5
 #define btn1 9
@@ -201,27 +199,22 @@ int input_btn(){
     
     if (btn1_state == 1)
     {
-        Serial.write("111111111111111111111111111111111\n");
         return 1;
     }
     else if(btn2_state == 1)
     {
-        Serial.write("2222222222222222222222222222222222\n");
         return 2;
     }
     else if(btn3_state == 1)
     {
-        Serial.write("33333333333333333333333333333333333\n");
         return 3;
     }
     else if(btn4_state == 1)
     {
-        Serial.write("4444444444444444444444444444444444\n");
         return 4;
     }
     else if(resetbtn_state  == 1)
     {
-        Serial.write("55555555555555555555555555555555555\n");
         return 5;
     }
     else
@@ -254,7 +247,6 @@ int start_check(){
             
             
         random_sign();
-        Serial.write("111111111\n");
         int check_cnt = 0;
         int reset_cnt = 0;
         while (1)
@@ -262,11 +254,8 @@ int start_check(){
             int btn_value = 0;
             btn_value = input_btn();
             delay(50);
-            sprintf(buff, "%d", btn_value);
-            Serial.write(buff);
 
             if(check_cnt > 4){//버튼 횟수 5회 이상
-                Serial.write("44444444444444\n");
                 break;
             }
             
@@ -285,7 +274,6 @@ int start_check(){
             {
                 reset_cnt++;
                 make_delay(0, 500);
-                Serial.write("6666666666666666666666666\n");
                 continue;
             }
             
@@ -298,10 +286,8 @@ int start_check(){
             {
                 //틀렸습니다.
                 cnt = -1;// 카운트 초기화
-                Serial.write("555555555555555555555\n");
                 break;
             }
-            Serial.write("3333333333\n");
             delay(500);
         }
         cnt++;
