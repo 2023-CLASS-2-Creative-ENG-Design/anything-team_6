@@ -1,22 +1,36 @@
+#include <Arduino.h>
 #include <stdlib.h>
-#include <nRF24L01.h>
-#include <RF24.h>
-#include <SPI.h>
-
-RF24 radio(9,8);
-const byte address[6] = "01101";
+#include <time.h>
+#include <stdio.h>
 
 void setup() {
-    radio.begin();
-    radio.openWritingPipe(address);
-    radio.setPALevel(RF24_PA_MIN);
+  Serial.begin(9600);
+  srand(time(NULL));
 
-    radio.stopListening();
+  pinMode(6,OUTPUT);
+  pinMode(7,OUTPUT);
+
+  char a[111];
+  
+  sprintf(a,"%c",'s');
+  Serial.write(a);
 }
 
+int n;
+
+char b[100];
+
 void loop() {
-    //임시 RF24 수신 테스트 코드
-    const char text[] = "Hello World";
-    radio.write(&text, sizeof(text));
-    delay(1000);
+  if(Serial.available()>0){
+    char c=Serial.read();
+    if(c=='f'){
+      digitalWrite(7, LOW);
+      digitalWrite(6, HIGH);
+    }
+    else if(c=='p'){
+      digitalWrite(6, LOW);
+      digitalWrite(7, HIGH);
+    }
+
+  }
 }

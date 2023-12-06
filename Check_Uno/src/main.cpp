@@ -247,9 +247,9 @@ int start_check(){
     while (1)
     {
         
-        if(cnt > 2){
+        if(cnt > 0){
           lcd.clear();
-            return 1;
+          return 1;
         }
             
             
@@ -267,7 +267,7 @@ int start_check(){
 
             if(check_cnt > 4){//버튼 횟수 5회 이상
                 Serial.write("44444444444444\n");
-                return 1;
+                break;
             }
             
             if(!(btn_value == 1 || btn_value == 2 || btn_value == 3 || btn_value == 4 || btn_value == 5)){
@@ -324,21 +324,43 @@ void setup() {
     pinMode(resetbtn, INPUT);
 }
 
+char a[100];
+
 void loop() {
+
 
     if(Serial.available()>0){
         char c=Serial.read();
 
         if(c=='s'){
             if(start_check()){
-                Serial.println("p");
+            // if(0){
+              sprintf(a,"%c",'p');
+                Serial.println(a);
             }
             else{
-                Serial.println("f");
+                sprintf(a,"%c",'f');
+                Serial.println(a);
             }
         }
+
+        // if(c=='1'){
+        //     lcd.clear();
+        //     print_arrow(0, UP);
+        // }
+        // else if(c=='2'){
+        //     lcd.clear();
+        //     print_arrow(0, DOWN);
+        // }
+        // else if(c=='3'){
+        //     lcd.clear();
+        //     print_arrow(0, RIGHT);
+        // }
+        // else if(c=='4'){
+        //     lcd.clear();
+        //     print_arrow(0, LEFT);
+        // }
+        // delay(100);
     }
 
-    
-    
 }
