@@ -157,6 +157,12 @@ void print_arrow(int i, direction j){ //i는 슬롯(0~4) j는 화살표 방향
     }
 }
 
+void make_delay(int i,int j){
+    delay(i);
+    lcd.noDisplay();
+    delay(j);
+    lcd.display();
+}
 
 void random_sign(){
         // 랜덤값 생성 코드
@@ -174,10 +180,7 @@ void random_sign(){
     for(int i = 0; i < MAX; i++){
         print_arrow(i, (direction)(randNumber[i]));
     }
-    delay(100);
-    lcd.noDisplay();
-    delay(500);
-    lcd.display();
+    make_delay(100, 500);
     return;
 }
 
@@ -238,30 +241,15 @@ int check_btn(int rand_numbers, int btn_value){
     }
 }
 
-
-void setup() {
-    lcd.begin(16, 2);
-    print_init();
-
-    Serial.begin(9600);
-
-    randomSeed(analogRead(0));
-    pinMode(btn1, INPUT);
-    pinMode(btn2, INPUT);
-    pinMode(btn3, INPUT);
-    pinMode(btn4, INPUT);
-    pinMode(resetbtn, INPUT);
-}
-
-void loop() {
-
+int start_check(){
     int cnt = 0;
 
     while (1)
     {
+        
         if(cnt > 2){
           lcd.clear();
-          exit(0);
+            return 1;
         }
             
             
@@ -279,7 +267,7 @@ void loop() {
 
             if(check_cnt > 4){//버튼 횟수 5회 이상
                 Serial.write("44444444444444\n");
-                break;
+                return 1;
             }
             
             if(!(btn_value == 1 || btn_value == 2 || btn_value == 3 || btn_value == 4 || btn_value == 5)){
@@ -290,24 +278,20 @@ void loop() {
             if (reset_cnt > 3)//리셋 버튼 횟수 3회 이상
             {
                 lcd.clear();
-                exit(0);
+                return 0;
             }
             
             if (btn_value == 5)//리셋 버튼 눌렀을 때
             {
                 reset_cnt++;
-                lcd.noDisplay();
-                delay(500);
-                lcd.display();
+                make_delay(0, 500);
                 Serial.write("6666666666666666666666666\n");
                 continue;
             }
             
             if(check_btn(randNumber[check_cnt], (btn_value-1))){//버튼 값 확인
                 //맞았을 때
-                lcd.noDisplay();
-                delay(500);
-                lcd.display();
+                make_delay(0, 500);
                 check_cnt++;
             }
             else
@@ -322,5 +306,39 @@ void loop() {
         }
         cnt++;
     }
+}
+
+
+
+void setup() {
+    lcd.begin(16, 2);
+    print_init();
+
+    Serial.begin(9600);
+
+    randomSeed(analogRead(0));
+    pinMode(btn1, INPUT);
+    pinMode(btn2, INPUT);
+    pinMode(btn3, INPUT);
+    pinMode(btn4, INPUT);
+    pinMode(resetbtn, INPUT);
+}
+
+void loop() {
+
+    if(Serial.available()>0){
+        char c=Serial.read();
+
+        if(c=='s'){
+            if(start_check()){
+                Serial.println("p");
+            }
+            else{
+                Serial.println("f");
+            }
+        }
+    }
+
+    
     
 }
